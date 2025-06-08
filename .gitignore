@@ -1,0 +1,6 @@
+.vscode/launch.json
+SRC/test.py
+SRC/Config/save_file_format.yml
+SRC/__pycache__
+SRC/Utils/__pycache__
+SRC/story/__pycache__

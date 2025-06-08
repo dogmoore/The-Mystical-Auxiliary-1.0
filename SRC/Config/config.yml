@@ -1,0 +1,32 @@
+title: 
+  debug: "DEBUG The Mystical Auxilary"
+  normal: "The Mystical Auxilary"
+
+token:
+  debug: "TESTING"
+  normal: "token"
+
+login:
+  attempt_limit: 3
+
+debug:
+  debug_mode: True
+  notify: False
+  message: "The Mystical Auxilary started in DEBUG MODE"
+  start_up: True
+  alert: True
+  info: True
+  error: True
+  critical: True
+  flags:
+    bypass_login_button: True
+    bypass_login: False
+    disable_intro: False
+
+rng:
+  always_high: True
+  always_low: False
+
+port:
+  debug: 6969
+  normal: 8080

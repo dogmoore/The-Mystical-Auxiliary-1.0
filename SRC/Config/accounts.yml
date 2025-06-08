@@ -1,0 +1,50 @@
+credentials:
+  account_0:
+    username: "dogmoore"
+    password: "testing"
+    raw_password: "dGVzdGluZw=="
+    security:
+      enabled: False
+      type: 1
+      encoding: "utf-8"
+      permission_level: 11
+  account_1:
+    username: "test"
+    password: "1234"
+    security:
+      enabled: False
+      type: 0
+      encoding: "utf-8"
+      permission_level: 1
+  account_2:
+    username: "qwerty"
+    password: "1234"
+    security:
+      enabled: False
+      type: 0
+      encoding: "utf-8"
+      permission_level: 1
+  account_3:
+    username: "xx"
+    password: "test"
+    security:
+      enabled: False
+      type: 0
+      encoding: "utf-8"
+      permission_level: 1
+  account_4:
+    username: "mandy"
+    password: "1234"
+    security:
+      enabled: False
+      type: 0
+      encoding: "utf-8"
+      permission_level: 1
+  account_5:
+    username: "dave"
+    password: "1234"
+    security:
+      enabled: False
+      type: 0
+      encoding: "utf-8"
+      permission_level: 1

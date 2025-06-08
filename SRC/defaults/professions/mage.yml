@@ -1,0 +1,11 @@
+magicka: 300
+inventory: [
+  armor: [
+    mage_boots: True,
+    mage_hat: True,
+    mage_robes: True
+    ],
+  weapons: [
+    novice_wand: True
+  ]
+]
