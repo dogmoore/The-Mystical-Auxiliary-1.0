@@ -1,10 +1,12 @@
-from nicegui import ui, app, background_tasks
-from Utils.authentication import *
+from nicegui import ui, app, background_tasks, Client
+from nicegui.page import page
+from Utils.authentication import Authentication, Sign_Up
 from Story.intro import Introduction
 from Utils.events import Events
 from Utils.debug import Debug
-import colorama
+from fastapi import Request, Response
 from colorama import Fore
+import colorama
 import colorama
 import yaml
 
@@ -14,16 +16,49 @@ with open('SRC/Config/config.yml', 'r') as ymlfile:
    config = yaml.load(ymlfile, Loader=yaml.SafeLoader)
 
 
+# exception handling
+@app.exception_handler(500)
+async def expection_handler_500(request: Request, expection: Exception) -> Response:
+   ui.navigate.to('/500')
+
+@ui.page('/500')
+def error_500() -> None:
+   auth = app.storage.user.get('authenticated', False)
+   def return_home():
+      if auth:
+         ui.navigate.to('/the_mystical_auxiliary')
+      else:
+         ui.navigate.to('/login')
+   ui.label(text='Something went wrong!')
+   ui.label(text='please contact the system administrator')
+   ui.label(text=Exception)
+   ui.button(text='Return', on_click=lambda: return_home())
+
+@app.exception_handler(404) # error 404 handling
+async def exception_handler_404(request: Request, exception: Exception) -> Response: # route error 404 to 404 page then login or game page
+   auth = app.storage.user.get('authenticated', False)
+   with Client(page(''), request=request) as client:
+      ui.navigate.to('/404')
+   Debug.error(exception)
+   return client.build_response(request, 404)
+
+@ui.page('/404')
+def error_404() -> None:
+   ui.label(text='Something went wrong!')
+   ui.label(text='Please contact the system administrator')
+   ui.button(text='Return', on_click=lambda: return_home())
+   auth = app.storage.user.get('authenticated', False)
+   def return_home():
+      if auth:
+         ui.navigate.to('/the_mystical_auxiliary')
+      else:
+         ui.navigate.to('/login')
+# end exception handling
+
 @ui.page("/sign_up")
 def sign_up() -> None:
-   pass
+   Sign_Up.sign_up()
 
-
-# background tasks
-# @background_tasks.await_on_startup
-# def clear_storage() -> None:
-#    app.storage.user.clear()
-#    print('app starting, clearing storage...')
 
 @ui.page("/login")
 def login() -> None:
@@ -34,7 +69,7 @@ def login() -> None:
          else:
             if Authentication.auth_login(username.value, password.value):
                app.storage.user.update({'username': username.value, 'authenticated': True})
-               ui.navigate.to('/the_mystical_auxilary')
+               ui.navigate.to('/the_mystical_auxiliary')
                if config['debug']['debug_mode']:
                   ui.notify('login successful')
                   print(f"stored username: {app.storage.user.get('username')}")
@@ -51,9 +86,10 @@ def login() -> None:
       username = ui.input(label='Username').on('keydown.enter', attmept_login)
       password = ui.input(label='password').on('keydown.enter', attmept_login)
       ui.button(text='Submit', on_click=attmept_login)
+      ui.button(text='Sign Up', on_click=lambda: ui.navigate.to('/sign_up'))
       if config['debug']['debug_mode']:
          if config['debug']['flags']['bypass_login_button']:
-            ui.button(text='Bypass Login', on_click=lambda: ui.navigate.to('/the_mystical_auxilary'))
+            ui.button(text='Bypass Login', on_click=lambda: ui.navigate.to('/the_mystical_auxiliary'), color='yellow')
          ui.label(text='DEBUG MODE ENABLED')
 
 
@@ -63,8 +99,8 @@ def login() -> None:
       username.set_value(app.storage.user.get('username'))
 
 
-@ui.page('/the_mystical_auxilary')
-async def the_mystical_auxilary() -> None:
+@ui.page('/the_mystical_auxiliary')
+async def the_mystical_auxiliary() -> None:
    await Introduction.main(app.storage.user.get('username'))
 
 
@@ -77,7 +113,7 @@ def main_page() -> None: # redirect main page to login page
       'flag disabled': Fore.RED
       }
 
-   # console start up message
+# console start up message
    print('')
    Debug.info('Debug Flags')
    if config['debug']['debug_mode']:
@@ -103,7 +139,7 @@ def main_page() -> None: # redirect main page to login page
       ui.navigate.to('/login')
    else:
       app.storage.user.update({'username': 'dogmoore', 'authenticated': True})
-      ui.navigate.to('/the_mystical_auxilary')
+      ui.navigate.to('/the_mystical_auxiliary')
 
 # nicegui setup
 if config['debug']['debug_mode']: # setup flags

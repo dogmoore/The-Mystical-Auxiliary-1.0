@@ -12,7 +12,6 @@ login:
 debug:
   debug_mode: True
   notify: False
-  message: "The Mystical Auxilary started in DEBUG MODE"
   start_up: True
   alert: True
   info: True

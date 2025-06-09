@@ -1,3 +1,4 @@
 nicegui
 colorama
 PyYaml
+libsass

@@ -7,13 +7,10 @@ import time
 import base64
 
 # potential errors
-#  - FileNotFoundError
+#  - FileNotFoundError  TODO exception handling for this error
 
 with open("SRC/Config/config.yml", "r") as ymlfile:
   config = yaml.load(ymlfile, Loader=yaml.FullLoader)
-
-with open("SRC/Config/accounts.yml", "r") as ymlfile:
-  accounts = yaml.load(ymlfile, Loader=yaml.FullLoader) #FileNotFoundError
 
 # encryption type
 # 0 - plain text - default when testing
@@ -21,6 +18,12 @@ with open("SRC/Config/accounts.yml", "r") as ymlfile:
 # 2 - sha-256
 
 class Authentication:
+  try:
+    with open("SRC/Config/accounts.yml", "r") as ymlfile:
+      accounts = yaml.load(ymlfile, Loader=yaml.FullLoader) #FileNotFoundError
+  except FileNotFoundError as err:
+    Debug.error(err)
+
   def current_milli_time():
     return round(time.time() * 1000)
 
@@ -28,11 +31,11 @@ class Authentication:
     start_time = Authentication.current_milli_time() # start timer
     index_step = 0
     found = False
-    while index_step <= len(accounts["credentials"]) and not found:
-      if index_step >= len(accounts["credentials"]) - 1:
+    while index_step <= len(Authentication.accounts["credentials"]) and not found:
+      if index_step >= len(Authentication.accounts["credentials"]) - 1:
         break
       index = "account_" + str(index_step)
-      if accounts["credentials"][index]["username"] == username:
+      if Authentication.accounts["credentials"][index]["username"] == username:
         print("username pass")
         print(f"found at index {index_step}")
         end_time = Authentication.current_milli_time() # end timer
@@ -47,8 +50,8 @@ class Authentication:
       return False
 
   def auth_password(index: dict, password:str):
-    if not accounts["credentials"][index]["security"]["enabled"]:
-      if password == accounts["credentials"][index]["password"]:
+    if not Authentication.accounts["credentials"][index]["security"]["enabled"]:
+      if password == Authentication.accounts["credentials"][index]["password"]:
         print("password passed")
         return True
       else:
@@ -62,3 +65,20 @@ class Authentication:
       return False
     else:
       return Authentication.auth_password(username_passed, password)
+
+
+class Sign_Up(): # WIP
+  try:
+    with open('SRC/Config/accounts.yml', 'r') as ymlfile:
+      account = yaml.load(ymlfile, Loader=yaml.SafeLoader)
+  except FileNotFoundError as err:
+      Debug.error(err)
+
+  def sign_up() -> None:
+    username = ui.input(label='Username')
+    # email = ui.input(label='email')
+    password = ui.input(label='Password')
+
+    for username_check in Sign_Up.account['credentials']:
+      pass
+    

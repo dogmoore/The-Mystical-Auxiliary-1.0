@@ -53,7 +53,7 @@ class Dice():
         Debug.info(f'Result was {result}', notify=notify)
         return result
     
-    def roll_custom(min:int = 0, max:int = 5):
+    def roll_custom(min:int = 0, max:int = 5): # for internal checks only
         result = random.randint(min, max)
         Debug.info(f'Result was {result}', notify= notify)
         return result
