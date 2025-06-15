@@ -6,3 +6,4 @@ SRC/Utils/__pycache__
 SRC/story/__pycache__
 .nicegui
 SRC/Config/accounts.yml
+SRC/rewrites

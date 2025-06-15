@@ -18,6 +18,7 @@ debug:
   error: True
   critical: True
   flags:
+    ignore_delays: True
     bypass_login_button: True
     bypass_login: False
     disable_intro: False

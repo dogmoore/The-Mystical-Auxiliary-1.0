@@ -1,5 +1,5 @@
 from Utils.debug import Debug
-from Story.delays import Delays
+from Utils.delays import Delays
 from nicegui import ui, app
 from Utils.inventory_check import item_fetch
 from Utils.rng import Dice
@@ -12,17 +12,23 @@ with open("SRC/Config/config.yml", "r") as ymlfile:
 with open("SRC/Config/character_names.yml", "r") as ymlfile:
   names = yaml.load(ymlfile, Loader=yaml.FullLoader)
 
+with open("SRC/Config/items.yml", "r") as ymlfile:
+  items = yaml.load(ymlfile, Loader=yaml.FullLoader)
+
 
 class Introduction:
   def class_selection(profession: str) -> None:
     ui.notify(f'You chose {profession}')
     app.storage.user.update({"class": profession})
-    ui.chat_message(text=profession, sent=True)
+    # ui.chat_message(text=profession, sent=True)
 
   def gender_selection(gender: str) -> None:
     ui.notify(gender)
     app.storage.user.update({"gender": gender})
-
+  
+  def race_selection(race: str) -> None:
+    ui.notify(race)
+    app.storage.user.update({'race': race})
 
   async def main(username:str) -> None:
     ui.button(text='Logout', on_click=lambda: ui.navigate.to('/login'))
@@ -30,7 +36,7 @@ class Introduction:
 
     if not config['debug']['flags']['disable_intro']:
       ui.chat_message(name=names['narrator'], text=[f'welcome {username} to Mo\'kin', 'A Realm of knights and magic'])
-      # await Delays.medium_delay()
+      await Delays.medium_delay() # check debug flags
       with ui.chat_message():
         ui.chat_message(text=f'Lets get you started in this world, what is your profession?')
         
@@ -56,30 +62,161 @@ class Introduction:
           ui.button(text='Female', on_click=lambda: Introduction.gender_selection('Female'))
 
       with ui.chat_message():
-        with ui.row(): # race selection
-          ui.button(text='Human')
-
+        with ui.grid(columns=3): # race selection
+          ui.button(text='Human', on_click=lambda: Introduction.race_selection('Human'))
+          ui.button(text='Aasimar', on_click=lambda: Introduction.race_selection('Aasimar'))
+          ui.button(text='Dragonborn', on_click=lambda: Introduction.race_selection('Dragonborn'))
+          ui.button(text='Dawrf', on_click=lambda: Introduction.race_selection('Dwarf'))
+          ui.button(text='Elf', on_click=lambda: Introduction.race_selection('Elf'))
+          ui.button(text='Gnome', on_click=lambda: Introduction.race_selection('Gnome'))
+          ui.button(text='Orc', on_click=lambda: Introduction.race_selection('Orc'))
+          ui.button(text='Tiefling', on_click=lambda: Introduction.race_selection('Tiefling'))
+          ui.button(text='Halfing', on_click=lambda: Introduction.race_selection('halfing'))
+      ui.button(text='Complete Character', on_click=lambda: character_building_default())
       ui.button(text='check inventory', on_click=lambda: item_fetch.fetch_item('Warlock_staff'))
+      async def character_building_default():
 
-      # building inventory
-      profession = app.storage.user.get("class")
-      if profession == "Warrior":
-        pass
-      elif profession == 'Bard':
-        pass
-      elif profession == 'Cleric':
-        pass
-      elif profession == 'Warlock':
-        app.storage.user.update({'inventory' 'Warlock_boots': True, "Warlock_staff": True})
-    
+        # building inventory
+        match(app.storage.user.get("class")):
+          case "Warrior":
+            pass
+          case "Bard":
+            pass
+          case "Cleric":
+            pass
+          case "Druid":
+            pass
+          case "Fighter":
+            pass
+          case "Monk":
+            pass
+          case "Paladin":
+            pass
+          case "ranger":
+            pass
+          case "Rogue":
+            pass
+          case "Sorcerer":
+            pass
+          case "Warlock":
+            pass
+          case "Wizard":
+            starter = {'inventory': items['Leather Armor']}
 
-      intro_selection = Dice.roll_d3()
+        app.storage.user.update(starter)
+
+        # building stats
+        '''
+        27 points total
+
+        attributes
+          strength
+          dexterity
+          constitution
+          intelligence
+          wisdom
+          charisma
+        '''
+        match(app.storage.user.get('race')): # let player define?
+          case 'Human':
+            app.storage.user.update({
+              'strength': 10,
+              'dexterity': 10,
+              'constitution': 10,
+              'intelligence': 10,
+              'wisdom': 10,
+              'charisma': 10
+            })
+
+          case 'Aasimar':
+              app.storage.user.update({
+              'strength': 10,
+              'dexterity': 10,
+              'constitution': 10,
+              'intelligence': 10,
+              'wisdom': 10,
+              'charisma': 10
+            })
+
+          case 'Dragonborn':
+            app.storage.user.update({
+              'strength': 10,
+              'dexterity': 10,
+              'constitution': 10,
+              'intelligence': 10,
+              'wisdom': 10,
+              'charisma': 10
+            })
+
+          case 'Dwarf':
+            app.storage.user.update({
+              'strength': 10,
+              'dexterity': 10,
+              'constitution': 10,
+              'intelligence': 10,
+              'wisdom': 10,
+              'charisma': 10
+            })
+
+          case 'Elf':
+            app.storage.user.update({
+              'strength': 10,
+              'dexterity': 10,
+              'constitution': 10,
+              'intelligence': 10,
+              'wisdom': 10,
+              'charisma': 10
+            })
+
+          case 'Gnome':
+            app.storage.user.update({
+              'strength': 10,
+              'dexterity': 10,
+              'constitution': 10,
+              'intelligence': 10,
+              'wisdom': 10,
+              'charisma': 10
+            })
+
+          case 'Orc':
+            app.storage.user.update({
+              'strength': 10,
+              'dexterity': 10,
+              'constitution': 10,
+              'intelligence': 10,
+              'wisdom': 10,
+              'charisma': 10
+            })
+
+          case 'Tiefling':
+            app.storage.user.update({
+              'strength': 10,
+              'dexterity': 10,
+              'constitution': 10,
+              'intelligence': 10,
+              'wisdom': 10,
+              'charisma': 10
+            })
+
+          case 'Halfing':
+            app.storage.user.update({
+              'strength': 10,
+              'dexterity': 10,
+              'constitution': 10,
+              'intelligence': 10,
+              'wisdom': 10,
+              'charisma': 10
+            })
+
+      intro_selection = Dice.roll_d3(debug=True)
       if intro_selection == 1: # tavern
         pass
       elif intro_selection == 2: # kidnapping
         pass
       elif intro_selection == 3: # TBD
         pass
+      
+      # print(f'wisdom: {app.storage.user.get('wisdom')}')
 
     else:
       ui.label('Intro is disabled via flags')
